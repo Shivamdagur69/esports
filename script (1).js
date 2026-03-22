@@ -1,226 +1,152 @@
-/* RESET */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+// ===== NAVIGATION =====
+const navLinks = document.querySelectorAll('.nav-link');
+const hamburger = document.querySelector('.hamburger');
+const navMenu = document.querySelector('.nav-menu');
 
-/* BODY */
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #0c0c0c;
-    color: #fff;
-}
+// Smooth Scroll
+navLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = this.getAttribute('href');
+        document.querySelector(target).scrollIntoView({
+            behavior: 'smooth'
+        });
 
-/* CONTAINER */
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 20px;
-}
+        // Close mobile menu
+        navMenu.classList.remove('active');
+    });
+});
 
-/* NAVBAR */
-.navbar {
-    position: fixed;
-    width: 100%;
-    background: black;
-    padding: 15px 0;
-    z-index: 1000;
-}
+// Hamburger Toggle
+hamburger.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    hamburger.classList.toggle('active');
+});
 
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
 
-.nav-logo h2 {
-    color: #ff6b35;
-}
+// ===== COUNTDOWN TIMER =====
+const eventDate = new Date("April 1, 2026 00:00:00").getTime();
 
-.nav-menu {
-    display: flex;
-    list-style: none;
-    gap: 20px;
-}
+function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = eventDate - now;
 
-.nav-link {
-    color: white;
-    text-decoration: none;
-    transition: 0.3s;
-}
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((distance / 1000 / 60) % 60);
+    const seconds = Math.floor((distance / 1000) % 60);
 
-.nav-link:hover {
-    color: #ff6b35;
-}
+    document.getElementById("days").innerText = days;
+    document.getElementById("hours").innerText = hours;
+    document.getElementById("minutes").innerText = minutes;
+    document.getElementById("seconds").innerText = seconds;
 
-/* HAMBURGER */
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-}
-
-.bar {
-    height: 3px;
-    width: 25px;
-    background: #ff6b35;
-    margin: 4px 0;
-}
-
-/* HERO */
-.hero {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #000, #1a1a2e);
-    text-align: center;
-}
-
-.hero-title {
-    font-size: 3rem;
-    color: #ff6b35;
-}
-
-.hero-subtitle {
-    margin: 10px 0 20px;
-    color: #ccc;
-}
-
-/* BUTTON */
-.cta-button {
-    padding: 12px 25px;
-    background: #ff6b35;
-    color: white;
-    border-radius: 30px;
-    text-decoration: none;
-}
-
-/* COUNTDOWN */
-.countdown {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.countdown-item {
-    background: #111;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-/* SECTIONS */
-section {
-    padding: 80px 0;
-}
-
-.section-title {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #ff6b35;
-}
-
-/* ABOUT */
-.about p {
-    text-align: center;
-}
-
-.event-details {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.detail-item {
-    background: #111;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-/* GAMES */
-.games-grid {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.game-card {
-    background: #111;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 200px;
-}
-
-/* FORM */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-form input, form select {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-}
-
-.submit-btn {
-    background: #ff6b35;
-    color: white;
-    padding: 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-/* PAYMENT */
-.payment {
-    text-align: center;
-}
-
-/* CONTACT */
-.contact {
-    text-align: center;
-}
-
-/* FOOTER */
-.footer {
-    text-align: center;
-    padding: 20px;
-    background: black;
-}
-
-/* MOBILE */
-@media (max-width: 768px) {
-    .nav-menu {
-        position: absolute;
-        top: 60px;
-        left: -100%;
-        flex-direction: column;
-        width: 100%;
-        background: black;
-        text-align: center;
-    }
-
-    .nav-menu.active {
-        left: 0;
-    }
-
-    .hamburger {
-        display: flex;
-    }
-
-    .games-grid {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .event-details {
-        flex-direction: column;
+    if (distance < 0) {
+        document.getElementById("countdown").innerHTML = "Event Started!";
     }
 }
+
+setInterval(updateCountdown, 1000);
+
+
+// ===== FORM =====
+const form = document.getElementById("registrationForm");
+const successMessage = document.getElementById("successMessage");
+
+// Validate Form
+function validateForm(data) {
+    if (data.name.length < 2) {
+        alert("Enter valid name");
+        return false;
+    }
+
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(data.phone)) {
+        alert("Enter valid phone number");
+        return false;
+    }
+
+    if (!data.email.includes("@")) {
+        alert("Enter valid email");
+        return false;
+    }
+
+    if (!data.game) {
+        alert("Select a game");
+        return false;
+    }
+
+    if (!data.mode) {
+        alert("Select mode");
+        return false;
+    }
+
+    if (data.playerId.length < 3) {
+        alert("Enter valid Player ID");
+        return false;
+    }
+
+    return true;
+}
+
+
+// ===== FORM SUBMIT =====
+form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const data = {
+        name: document.getElementById("fullName").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        college: document.getElementById("college").value.trim(),
+        game: document.getElementById("game").value,
+        mode: document.getElementById("mode").value,
+        team: document.getElementById("teamName").value,
+        playerId: document.getElementById("playerId").value.trim()
+    };
+
+    if (!validateForm(data)) return;
+
+    // Save in local storage
+    let registrations = JSON.parse(localStorage.getItem("registrations")) || [];
+    registrations.push(data);
+    localStorage.setItem("registrations", JSON.stringify(registrations));
+
+    console.log("New Registration:", data);
+
+    // Show success message
+    form.style.display = "none";
+    successMessage.style.display = "block";
+});
+
+
+// ===== CLOSE SUCCESS =====
+function closeSuccess() {
+    successMessage.style.display = "none";
+    form.style.display = "block";
+    form.reset();
+}
+
+
+// ===== TEAM NAME CONDITION =====
+document.getElementById("mode").addEventListener("change", function () {
+    const teamField = document.getElementById("teamName");
+
+    if (this.value === "Squad") {
+        teamField.required = true;
+        teamField.placeholder = "Team Name *";
+    } else {
+        teamField.required = false;
+        teamField.placeholder = "Team Name (optional)";
+        teamField.value = "";
+    }
+});
+
+
+// ===== AUTO SCROLL BUTTON =====
+document.querySelector(".cta-button").addEventListener("click", function (e) {
+    e.preventDefault();
+    document.querySelector("#register").scrollIntoView({
+        behavior: "smooth"
+    });
+});
